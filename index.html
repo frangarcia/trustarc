@@ -11,12 +11,13 @@ TrustArc Privacy Management
 // Bucket/Categorization Mapping from TrustArc. Indexes are incremental according to the order they are displayed
 const REQUIRED = 1;
 const FUNCTIONAL = 2;
-const ADVERTISING = 3;
+const MARKETING = 3;
+const ANALYTICS = 4;
 
 /*
 * @todo: Update to match your domain name
 */
-const YOUR_DOMAIN = "yourdomain.com";
+const YOUR_DOMAIN = "netlify.app";
 
 /**
 * This function returns value of notice_behavior cookie to determine location and behavior manager based on domain.
@@ -41,7 +42,7 @@ function getBehavior() {
 // Once the the CCM loads. 
 var interval = setInterval(() => {
     if (window.truste && truste.cma && truste.cma.callApi) {
-        var consentDecision = truste.cma.callApi("getGDPRConsentDecision", "your_domain.com");
+        var consentDecision = truste.cma.callApi("getGDPRConsentDecision", YOUR_DOMAIN);
         handleConsentDecision(consentDecision);
         clearInterval(interval);
     }
@@ -86,14 +87,16 @@ function handleConsentDecision(consent) {
     * @todo: If more than 3 buckets/categories are in use, please map them here
     */
     var functionalAccepted = consent.consentDecision.includes(FUNCTIONAL);
-    var advertisingAccepted = consent.consentDecision.includes(ADVERTISING);
+    var marketingAccepted = consent.consentDecision.includes(MARKETING);
+    var analyticsAccepted = consent.consentDecision.includes(ANALYTICS);
 
     // Check if behavior manager is EU
     // This is optional if you want opt-out experience (opt in by default)
     var isEU = /.*(,|)eu/i.test(getBehavior());
     if(consent.source == 'implied' && !isEU) {
       functionalAccepted = true;
-      advertisingAccepted = true;
+      marketingAccepted = true;
+      analyticsAccepted = true;
     }
 
 
@@ -103,11 +106,12 @@ function handleConsentDecision(consent) {
     var marygold_consent = { 
       necessary: true,
       functional: functionalAccepted,
-      analytics: functionalAccepted,
-      marketing: advertisingAccepted,
+      marketing: marketingAccepted,
+      analytics: analyticsAccepted,
     }
     
     console.log('MaryGold Consent is: ', marygold_consent);
+    NGX.Embed.setPrivacyConsents(cookies);
 }
 </script>
 </head>
