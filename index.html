@@ -103,14 +103,14 @@ function handleConsentDecision(consent) {
     /*
     * @todo: Update the mapping and call the API
     */
-    var marygold_consent = { 
+    var cookies = { 
       necessary: true,
       functional: functionalAccepted,
       marketing: marketingAccepted,
       analytics: analyticsAccepted,
     }
     
-    console.log('MaryGold Consent is: ', marygold_consent);
+    console.log('MaryGold Consent is: ', cookies);
     NGX.Embed.setPrivacyConsents(cookies);
 }
 </script>
