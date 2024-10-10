@@ -18,7 +18,7 @@ const ANALYTICS = 4;
 /*
 * @todo: Update to match your domain name
 */
-const YOUR_DOMAIN = "netlify.app";
+const YOUR_DOMAIN = "trustarc.netlify.app";
 
 /**
 * This function returns value of notice_behavior cookie to determine location and behavior manager based on domain.
@@ -74,7 +74,7 @@ window.addEventListener("message", (event) => {
             // Waiting half a second to make sure user's preferences are reflected. 
             setTimeout(() => {
                 var consentDecision = truste.cma.callApi("getGDPRConsentDecision", YOUR_DOMAIN);
-                // console.log("Consent Decision: ", consentDecision);
+                console.log("Consent Decision: ", consentDecision);
                 handleConsentDecision(consentDecision);
             }, 500);
         }
