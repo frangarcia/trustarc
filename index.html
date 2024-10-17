@@ -3,7 +3,7 @@
 <title>
 TrustArc Privacy Management
 </title>
-<script src="https://d3-display.ngx.dev/ui/ngx.embed.min.js"></script>
+<script src="https://d3-displayx.ngx.dev/embed/3d992a6b-8218-47ae-bbc4-0ed9c7a6a53e?mode=fixed&width=960&height=1200"></script>
 <!--<script src="https://r-d-web.global.ssl.fastly.net/ui/ngx.embed.min.js"></script>-->
 <!-- TrustArc Cookies Consent Notice start for starlit-pudding-027269.netlify.app -->
 <!--<script async="async" src="https://consent.trustarc.com/notice?domain=trustarcdemo2.com&gtm=1&c=teconsent&text=true&js=nj&noticeType=bb"></script>-->
@@ -11,7 +11,7 @@ TrustArc Privacy Management
 <body>
 <div id="consent_blackbar">
     <div id="content">
-	    <iframe src="https://d3-display.ngx.dev/display/container/dc/323e4be8-85cc-4c6e-a772-41b070c05214?mode=responsive&scrolling=no" frameborder="0" scrolling="no" width="1000" height="1000" id="ngxFrame569" allowTransparency="true"></iframe>
+	    
 	<!--<iframe src="https://r-d-web.global.ssl.fastly.net/display/container/dc/66fed12f-a496-4874-9d3c-e57f9890c6b2?mode=responsive&scrolling=no" frameborder="0" scrolling="no" width="1600" height="900" id="ngxFrame174605" allowTransparency="true"></iframe>-->
 	<!--<iframe src="https://d1-displayx.ngx.dev/display/container/dc/ee792cde-5f37-4e04-86dd-8430a57f3f1d?mode=adaptive" id="ngxFrameee792cde-5f37-4e04-86dd-8430a57f3f1d" frameborder="0" scrolling="no" allowTransparency="true"></iframe>
 	<script src="https://d1-displayx.ngx.dev/ui/ngx.embed.min.js"></script>-->
@@ -137,6 +137,7 @@ function handleConsentDecision(consent) {
   <script type="text/javascript" async="async" src="https://consent.trustarc.com/v2/notice/dbzwsi"></script>
 </div>
 
+
 <script type="text/javascript">
 // Bucket/Categorization Mapping from TrustArc. Indexes are incremental according to the order they are displayed
 const REQUIRED = parseInt("1", 10) || 1;
@@ -144,7 +145,7 @@ const FUNCTIONAL = parseInt("2", 10) || 2;
 const MARKETING = parseInt("3", 10) || 3;
 const ANALYTICS = parseInt("4", 10) || 4;
 
-const YOUR_DOMAIN = "trustarc.netlify.app";
+const YOUR_DOMAIN = "https://trustarc.netlify.app/";
 
 /**
 * This function returns value of notice_behavior cookie to determine location and behavior manager based on domain.
@@ -229,13 +230,7 @@ function handleConsentDecision(consent) {
       analytics: analyticsAccepted,
     }
 
-    if (NGX.App) {
-        // This is micro site mode
-        NGX.App.api.setPrivacyConsents(cookies);
-    } else {
-        // this is embed mode
-        NGX.Embed.setPrivacyConsents(cookies);
-    }
+    NGX.api('privacy:set:consent', cookies);
 }
 </script>
 
