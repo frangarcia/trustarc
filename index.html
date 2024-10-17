@@ -3,8 +3,7 @@
 <title>
 TrustArc Privacy Management
 </title>
-
-<!--<script src="https://r-d-web.global.ssl.fastly.net/ui/ngx.embed.min.js"></script>-->
+<script src="https://r-d-web.global.ssl.fastly.net/ui/ngx.embed.min.js"></script>
 <!-- TrustArc Cookies Consent Notice start for starlit-pudding-027269.netlify.app -->
 <!--<script async="async" src="https://consent.trustarc.com/notice?domain=trustarcdemo2.com&gtm=1&c=teconsent&text=true&js=nj&noticeType=bb"></script>-->
 </head>
@@ -19,7 +18,7 @@ TrustArc Privacy Management
 <!--<div id="teconsent"></div>-->
 
 
-<!--<div id="consent-banner"></div>
+<div id="consent-banner"></div>
 <div id="teconsent">
   <script type="text/javascript" async="async" src="https://consent.trustarc.com/v2/notice/dbzwsi"></script>
 </div>
@@ -130,109 +129,6 @@ function handleConsentDecision(consent) {
     console.log('MariGold Consent is: ', cookies);
     NGX.Embed.setPrivacyConsents(cookies);
 }
-</script>-->
-
-<div id="consent-banner"></div>
-<div id="teconsent">
-  <script type="text/javascript" async="async" src="https://consent.trustarc.com/v2/notice/dbzwsi"></script>
-</div>
-
-
-<script type="text/javascript">
-// Bucket/Categorization Mapping from TrustArc. Indexes are incremental according to the order they are displayed
-const REQUIRED = parseInt("1", 10) || 1;
-const FUNCTIONAL = parseInt("2", 10) || 2;
-const MARKETING = parseInt("3", 10) || 3;
-const ANALYTICS = parseInt("4", 10) || 4;
-
-const YOUR_DOMAIN = "https://trustarc.netlify.app/";
-
-/**
-* This function returns value of notice_behavior cookie to determine location and behavior manager based on domain.
-* When no notice_behavior cookie exists, this returns a blank string.
-*/
-function getBehavior() {
-    var result = "";
-    var rx = new RegExp("\\s*notice_behavior\\s*=\\s*([^;]*)").exec(document.cookie);
-    if(rx&&rx.length>1){
-        result = rx[1];
-    }
-    return result;
-}
-
-// This code is responsible for listening to any consent changes trough TrustArc's CCM Instance
-// And pushing the consent changes to the dataLayer according to the customer's consent mapping
-
-/*
-* If consent should not be initialized, remove the set interval
-*/
-// This is for the intial load. If the user has a consent different from the default vales, this is to push an update to the datalayer
-// Once the the CCM loads.
-var interval = setInterval(() => {
-    if (window.truste && truste.cma && truste.cma.callApi) {
-        var consentDecision = truste.cma.callApi("getGDPRConsentDecision", YOUR_DOMAIN);
-        handleConsentDecision(consentDecision);
-        clearInterval(interval);
-    }
-}, 100);
-
-
-// Start listning to when users submit their preferences
-window.addEventListener("message", (event) => {
-    let eventDataJson = null;
-
-    // We only care about TrustArc Events at this point. And TrustArc's even it encoded in JSON
-    try {
-        eventDataJson = JSON.parse(event.data);
-    } catch {
-        // Some other event that is not JSON.
-        // TrustArc encodes the data as JSON
-        // console.log(event.data);
-    }
-
-    // Safeguard to make sure we are only getting events from TrustArc
-    if (eventDataJson && eventDataJson.source === "preference_manager") {
-
-        // Means that the user has submited their preferences
-        if (eventDataJson.message === "submit_preferences") {
-
-            // Waiting half a second to make sure user's preferences are reflected.
-            setTimeout(() => {
-                var consentDecision = truste.cma.callApi("getGDPRConsentDecision", YOUR_DOMAIN);
-                handleConsentDecision(consentDecision);
-            }, 500);
-        }
-    }
-
-}, false);
-
-function handleConsentDecision(consent) {
-    /*
-    * If more than 3 buckets/categories are in use, please map them here
-    */
-    var functionalAccepted = consent.consentDecision.includes(FUNCTIONAL);
-    var marketingAccepted = consent.consentDecision.includes(MARKETING);
-    var analyticsAccepted = consent.consentDecision.includes(ANALYTICS);
-
-    // Check if behavior manager is EU
-    // This is optional if you want opt-out experience (opt in by default)
-    var isEU = /.*(,|)eu/i.test(getBehavior());
-    if(consent.source == 'implied' && !isEU) {
-      functionalAccepted = true;
-      marketingAccepted = true;
-      analyticsAccepted = true;
-    }
-
-    var cookies = {
-      necessary: true,
-      functional: functionalAccepted,
-      marketing: marketingAccepted,
-      analytics: analyticsAccepted,
-    }
-
-    NGX.api('privacy:set:consent', cookies);
-}
 </script>
-<script src="https://d3-displayx.ngx.dev/embed/3d992a6b-8218-47ae-bbc4-0ed9c7a6a53e?mode=fixed&width=960&height=1200"></script>
 </body>
 </html>
